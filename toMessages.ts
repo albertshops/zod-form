@@ -14,7 +14,11 @@ export function toMessages<T>(parsed: z.SafeParseReturnType<T, any>) {
 
   parsed.error.issues.forEach((issue) => {
     const path = issue.path.join(".") as FieldPath<T>;
-    messages[path] = issue.message;
+    if (path in messages) {
+      messages[path].push(issue.message);
+    } else {
+      messages[path] = [issue.message];
+    }
   });
 
   return messages;
